@@ -6,8 +6,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,8 +26,6 @@ class MyApp extends StatelessWidget {
 }
 
 class LandingPage extends StatelessWidget {
-  const LandingPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +37,13 @@ class LandingPage extends StatelessWidget {
           onPressed: () {
             Navigator.pushNamed(context, '/initiate');
           },
-          child: Text('Start Game'),
+          child: Text(
+            'Start Game',
+            style: TextStyle(fontSize: 24.0),
+          ),
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+          ),
         ),
       ),
     );
@@ -49,8 +51,6 @@ class LandingPage extends StatelessWidget {
 }
 
 class InitiatePage extends StatelessWidget {
-  const InitiatePage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,19 +62,40 @@ class InitiatePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
-              decoration: InputDecoration(labelText: 'Player 1 Name'),
+              decoration: InputDecoration(
+                labelText: 'Player 1 Name',
+                border: OutlineInputBorder(),
+              ),
               onChanged: (value) => player1Name = value,
             ),
+            SizedBox(height: 20),
             TextField(
-              decoration: InputDecoration(labelText: 'Player 2 Name'),
+              decoration: InputDecoration(
+                labelText: 'Player 2 Name',
+                border: OutlineInputBorder(),
+              ),
               onChanged: (value) => player2Name = value,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/game');
+                if (player1Name.isNotEmpty && player2Name.isNotEmpty) {
+                  Navigator.pushReplacementNamed(context, '/game');
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Please enter names for both players.'),
+                    ),
+                  );
+                }
               },
-              child: Text('Play'),
+              child: Text(
+                'Play',
+                style: TextStyle(fontSize: 20.0),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+              ),
             ),
           ],
         ),
@@ -87,8 +108,6 @@ String player1Name = '';
 String player2Name = '';
 
 class GamePage extends StatefulWidget {
-  const GamePage({super.key});
-
   @override
   _GamePageState createState() => _GamePageState();
 }
@@ -109,26 +128,41 @@ class _GamePageState extends State<GamePage> {
       appBar: AppBar(
         title: Text('Game Page'),
       ),
-      body: Center(
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Range: $minRange - $maxRange'),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              child: TextField(
-                controller: guessController,
-                decoration: InputDecoration(labelText: 'Enter your guess'),
-                keyboardType: TextInputType.number,
-              ),
+            Text(
+              'Range: $minRange - $maxRange',
+              style: TextStyle(fontSize: 20.0),
             ),
             SizedBox(height: 20),
-            Text('Current Player: $currentPlayer'),
+            Text(
+              'Current Player: $currentPlayer',
+              style: TextStyle(fontSize: 20.0),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: guessController,
+              decoration: InputDecoration(
+                labelText: 'Enter your guess',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 checkGuess();
               },
-              child: Text('Check'),
+              child: Text(
+                'Check',
+                style: TextStyle(fontSize: 20.0),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+              ),
             ),
           ],
         ),
@@ -159,22 +193,10 @@ class _GamePageState extends State<GamePage> {
         guessController.clear();
       }
     } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Invalid Guess'),
-            content: Text('Please enter a valid number within the current range.'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter a valid number within the current range.'),
+        ),
       );
     }
   }
@@ -215,8 +237,6 @@ class _GamePageState extends State<GamePage> {
 }
 
 class ResultPage extends StatelessWidget {
-  const ResultPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic>? args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
@@ -234,14 +254,26 @@ class ResultPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('$player1Name Score: $player1Score'),
-            Text('$player2Name Score: $player2Score'),
-            SizedBox(height: 20),
+            Text(
+              '$player1Name Score: $player1Score',
+              style: TextStyle(fontSize: 24.0),
+            ),
+            Text(
+              '$player2Name Score: $player2Score',
+              style: TextStyle(fontSize: 24.0),
+            ),
+            SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/game');
               },
-              child: Text('Play Again'),
+              child: Text(
+                'Play Again',
+                style: TextStyle(fontSize: 20.0),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+              ),
             ),
           ],
         ),
